@@ -1,0 +1,128 @@
+Members:
+	Gong Cheng,	gcheng2@stevens.edu
+	Maisi Li,	mli27@stevens.edu
+
+===============================================================================
+
+Redirections:
+	Only the last file will be used for redirections. All the files will be
+	checked for related permission.
+
+Builtins:
+	If builtins are in a pipeline, they will be executed in the forked 
+	child processes, which means `exit` and `cd` will have no effect on
+	the shell.
+
+Background command:
+	'&' could only appear at the end of the last command in a pipeline.
+	Background command cannot be terminated by ctrl-c.
+
+Pipeline:
+	'|' could not apppear at the beginning of the input.  If '|' appears
+	at the end of the input, we assume the input is not finished, and '>' 
+	will be printed and user can continue typing the command.
+
+Special characters/strings:
+	Only '&', '|', '\n', '>', '<', "$$", and "$?" are treated as special
+	characters/strings and will be interpreted.
+
+	Quotation marks will not be interpreted.  For example `"test  test"` 
+	will be read as `"test` and `test"`.
+
+Exit status:
+	Our program returns EXIT_FAILURE if error occurs during startup, or
+	the exit status of the last command if the command terminated normally,
+	or 130 if the command is terminated by a signal, or 127 otherwise.
+
+Limitations:
+	All the limitations of the input are defined in `sish.h`
+
+===============================================================================
+
+Collaborations:
+
+	We finished the assignment by using pair programming.  We discussed, 
+	thought and code together.  We programmed on one computer, one typed 
+	and the other inspected.  We switched roles every one hour.
+
+	We met and worked together in the library every evening.  The first
+	two days we read and discussed the manual page of sish, figured out
+	how to implement the program.  We wrote some test code to test our
+	ideas.  We built the structure of the program and began to implement 
+	the program on the third day.
+
+	Every day we spent one hour discussing questions, then four hours
+	coding.  Each of us got a copy of the code and a copy of the questions 
+	we left before we went home.
+
+===============================================================================
+
+Additional test cases:
+
+sish$ pwd
+/home/gcheng2/apue/sish
+sish$ env | grep SHELL
+SHELL=/home/gcheng2/apue/sish/sish
+sish$ cd /nowhere
+cd: /nowhere: chdir() error: No such file or directory
+sish$ echo $?
+1
+sish$ exit | ls
+Makefile  builtin.c  loop.h  sish.c  utils.c
+README    loop.c     sish    sish.h  utils.h
+sish$ echo 123 >
+./sish: syntax error: near <newline>
+sish$ echo 123 >>>file
+./sish: syntax error: near >
+sish$ | ls
+./sish: syntax error: near |
+sish$ ls & | cat
+./sish: syntax error: near &
+sish$ ^C
+sish$ echo test |
+> cat
+test
+sish$ echo 123 >file1 >file2
+sish$ ls file1 file2
+file1  file2
+sish$ cat file1
+sish$ cat file2
+123
+sish$ echo 234 >>file2
+sish$ cat file2
+123
+234
+sish$ rm file1 file2
+sish$ echo test > /nowhere/nowhere
+./sish: /nowhere/nowhere: No such file or directory
+sish$ ls -R / | cat > /dev/null &
+sish$ ps aux | grep gcheng2
+root      6981  0.0  0.1  65808  3824 ?        Ss   21:03   0:00 sshd: gcheng2 [priv]
+gcheng2   7105  0.0  0.0  65956  1600 ?        S    21:03   0:00 sshd: gcheng2@pts/2
+gcheng2   7106  0.0  0.3  18580 10692 pts/2    Ss   21:03   0:00 -bash
+gcheng2   7739  0.0  0.0   4772   764 pts/2    S+   21:12   0:00 ./sish
+gcheng2   8950 28.4  0.0  18308  1772 pts/2    D    21:33   0:01 ls -R /
+gcheng2   8951  0.4  0.0   4324   356 pts/2    S    21:33   0:00 cat
+gcheng2   8955  0.0  0.0   7052   980 pts/2    R+   21:33   0:00 ps aux
+gcheng2   8956  0.0  0.0   6500   620 pts/2    S+   21:33   0:00 grep gcheng2
+sish$ ls -l /proc/8950/fd
+total 0
+lrwx------ 1 gcheng2 student 64 Dec 16 21:33 0 -> /dev/pts/2
+l-wx------ 1 gcheng2 student 64 Dec 16 21:33 1 -> pipe:[1991250]
+lrwx------ 1 gcheng2 student 64 Dec 16 21:33 2 -> /dev/pts/2
+sish$ ls -l /proc/8951/fd
+total 0
+lr-x------ 1 gcheng2 student 64 Dec 16 21:33 0 -> pipe:[1991250]
+l-wx------ 1 gcheng2 student 64 Dec 16 21:33 1 -> /dev/null
+lrwx------ 1 gcheng2 student 64 Dec 16 21:33 2 -> /dev/pts/2
+sish$ sleep 10
+^C
+sish$ echo $?
+130
+sish$ sleep 10 &
+sish$ ^C
+sish$ ps aux | grep sleep
+gcheng2  10331  0.0  0.0   4304   352 pts/2    S    21:58   0:00 sleep 10
+gcheng2  10338  0.0  0.0   6500   624 pts/2    S+   21:58   0:00 grep sleep
+sish$ exit
+
