@@ -1,6 +1,46 @@
-Members:
-	Gong Cheng,	gcheng2@stevens.edu
-	Maisi Li,	mli27@stevens.edu
+NAME
+  sish -- a simple shell
+
+SYNOPSIS
+  sish [-x][-c command]
+
+OPTIONS
+  -c command
+           Execute the given command.
+  -x
+           Enable tracing: Write each command to standard error, preceeded by
+					 '+'.
+
+REDIRECTION
+  >file    Redirect standard output to file.
+	>>file   Append standard output to file.
+	<file    Redirect standard input from file.
+
+PIPELINES
+  A pipeline is a sequence of one or more commands separated by the control
+	operator ’|’. The standard output of all but the last command is connected to
+	the standard input of the next command. The standard output of the last
+	command is, absent any redirection operators, the controlling terminal.
+
+BACKGROUND COMMANDS
+  If a command is terminated by the control operator ampersand (&), the shell
+	executes the command asynchronously -- that is, the shell does not wait for
+	the command to finish before prompting the user for the next command.
+
+Builtins
+  cd [dir]
+	         Change the current working directory. If dir is not specified,
+					 change to the user's home directory.
+	echo [word]
+	         Print the given word, followed by a '\n'. The following special
+					 values are supported:
+					 $?  The exit status of the last command
+					 $$  The current process ID.
+	exit
+	         Exit the current shell.
+
+ENVIRONMENT
+  SHELL    the path of the executable of sish
 
 ===============================================================================
 
@@ -9,7 +49,7 @@ Redirections:
 	checked for related permission.
 
 Builtins:
-	If builtins are in a pipeline, they will be executed in the forked 
+	If builtins are in a pipeline, they will be executed in the forked
 	child processes, which means `exit` and `cd` will have no effect on
 	the shell.
 
@@ -19,14 +59,14 @@ Background command:
 
 Pipeline:
 	'|' could not apppear at the beginning of the input.  If '|' appears
-	at the end of the input, we assume the input is not finished, and '>' 
+	at the end of the input, we assume the input is not finished, and '>'
 	will be printed and user can continue typing the command.
 
 Special characters/strings:
 	Only '&', '|', '\n', '>', '<', "$$", and "$?" are treated as special
 	characters/strings and will be interpreted.
 
-	Quotation marks will not be interpreted.  For example `"test  test"` 
+	Quotation marks will not be interpreted.  For example `"test  test"`
 	will be read as `"test` and `test"`.
 
 Exit status:
@@ -39,25 +79,7 @@ Limitations:
 
 ===============================================================================
 
-Collaborations:
-
-	We finished the assignment by using pair programming.  We discussed, 
-	thought and code together.  We programmed on one computer, one typed 
-	and the other inspected.  We switched roles every one hour.
-
-	We met and worked together in the library every evening.  The first
-	two days we read and discussed the manual page of sish, figured out
-	how to implement the program.  We wrote some test code to test our
-	ideas.  We built the structure of the program and began to implement 
-	the program on the third day.
-
-	Every day we spent one hour discussing questions, then four hours
-	coding.  Each of us got a copy of the code and a copy of the questions 
-	we left before we went home.
-
-===============================================================================
-
-Additional test cases:
+Test cases:
 
 sish$ pwd
 /home/gcheng2/apue/sish
@@ -125,4 +147,3 @@ sish$ ps aux | grep sleep
 gcheng2  10331  0.0  0.0   4304   352 pts/2    S    21:58   0:00 sleep 10
 gcheng2  10338  0.0  0.0   6500   624 pts/2    S+   21:58   0:00 grep sleep
 sish$ exit
-
