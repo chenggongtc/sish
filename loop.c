@@ -706,7 +706,7 @@ print()
 }
 
 static void
-intHandler()
+intHandler(int signo)
 {
 	printf("\n");
 	print();
@@ -714,7 +714,7 @@ intHandler()
 }
 
 static void
-chldHandler()
+chldHandler(int signo)
 {
 	int status;
 	while (waitpid(-1, &status, WNOHANG) > 0) {

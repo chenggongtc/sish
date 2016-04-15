@@ -19,7 +19,7 @@ static int check_status(int);
 static void execute_command(char [MAX_CMD][MAX_CMD_LEN], pid_t [MAX_CMD], int);
 static void trace(char [MAX_CMD][MAX_CMD_LEN], int);
 static void print();
-static void intHandler();
-static void chldHandler();
+static void intHandler(int);
+static void chldHandler(int);
 
 #endif
